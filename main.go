@@ -8,14 +8,24 @@ import (
 	"ez-code-run/middlewares"
 	"ez-code-run/models"
 
+	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )
 
 const directory = "public"
 
 func main() {
+
+	// 環境変数読み込み
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// DB接続
 	models.InitDB()
 
+	// ルーティング
 	mux := http.NewServeMux()
 
 	// 静的ファイルのハンドリング
@@ -26,7 +36,7 @@ func main() {
 	mux.HandleFunc("POST /api/auth/login", controllers.LoginUser)
 	mux.HandleFunc("GET /api/auth/user", middlewares.AuthMiddleware(controllers.GetUser))
 
-	// 問題関連のエンドポイント
+	// Problem関連のエンドポイント
 	mux.HandleFunc("GET /api/v1/problem", middlewares.AuthMiddleware(controllers.GetAllProblems))
 	mux.HandleFunc("GET /api/v1/problem/{id}", middlewares.AuthMiddleware(controllers.GetProblem))
 

@@ -63,7 +63,8 @@ func CreateSubmission(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// ここでコードを実行
+	// ここでコード実行
+	// TODO : Dockerを使って実行環境を分離する
 	executors.ExecuteCode(&submission, &problem)
 
 	w.WriteHeader(http.StatusCreated)

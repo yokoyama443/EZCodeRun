@@ -21,7 +21,7 @@ window.onload = function() {
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert('エラーが発生しました。');
+            alert('ログインに失敗しました。');
         });
     });
 }

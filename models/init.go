@@ -2,6 +2,7 @@ package models
 
 import (
 	"log"
+	"os"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -11,7 +12,7 @@ var DB *gorm.DB
 
 func InitDB() {
 	var err error
-	DB, err = gorm.Open(sqlite.Open("kutecoderunner.db"), &gorm.Config{})
+	DB, err = gorm.Open(sqlite.Open(os.Getenv("DB_PATH")), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
@@ -24,7 +25,7 @@ func InitDB() {
 	addSampleProblems()
 }
 
-// サンプル問題を追加
+// サンプル問題追加用
 func addSampleProblems() {
 	var count int64
 	DB.Model(&Problem{}).Count(&count)

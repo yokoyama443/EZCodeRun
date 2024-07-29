@@ -5,12 +5,14 @@ import (
 	"ez-code-run/models"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/golang-jwt/jwt"
 )
 
 func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		jwtSecret := os.Getenv("JWT_SECRET")
 		cookie, err := r.Cookie("token")
 		if err != nil {
 			if err == http.ErrNoCookie {
@@ -21,11 +23,11 @@ func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		tokenString := cookie.Value
+		tokenStr := cookie.Value
 		claims := &models.Claims{}
 
-		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-			return []byte("your-secret-key"), nil
+		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+			return []byte(jwtSecret), nil
 		})
 
 		if err != nil {
